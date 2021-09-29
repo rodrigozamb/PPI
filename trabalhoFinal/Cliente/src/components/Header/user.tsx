@@ -22,7 +22,7 @@ export const User = ({ showProfileDate }: UserProps) => {
                 borderRightWidth={1}
                 borderColor='gray.700'
             >
-                <Icon as={RiNotificationLine} fontSize='20'/>
+                {/* <Icon as={RiNotificationLine} fontSize='20'/> */}
             </HStack>
         
             <Flex

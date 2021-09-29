@@ -13,22 +13,22 @@ export const Community = () => {
     const posts = [
         {
             community: `f/${communityName}`,
-            author: `d/Abdala`,
-            title: `EAD sucks`,
-            content: `Não estou gostando do modelo EAD da maioria das Instituições de ensino, tanto médio quanto superior, não ter o contato
-            direto com os professores faz toda a diferença no ensino. O que vocês acham?`,
+            author: `por Abdala`,
+            title: `Retorno dos festivais musicais`,
+            content: `Em alguns países eventos de cultura já estão retomando suas atividades, além de ser uma boa notícia para as pessoas, os eventos provocam um crescimento
+            significativo da economia. Qual evento da sua cidade você está ansioso para participar quando acabar a pandemia?`,
             likesCount: 8,
             dislikesCount: 1,
             commentaryCount: 1,
             shareCount: 0,
             commentaries: [
-                {name: 'Laura Beatris', avatar: 'https://github.com/lauraBeatris.png',content: 'Como aluna eu digo que vale a pena aprender a usar o Teams, fica muito organizado.', likesCounter: 4}
+                {name: 'Laura Beatris', avatar: 'https://github.com/lauraBeatris.png',content: 'Mal posso esperar pra voltar o Rock in Rio, quero muito ir', likesCounter: 4}
             ]
         },
         {
             community: `f/${communityName}`,
-            author: `d/Abdala`,
-            title: `New World é bom?`,
+            author: `por Abdala`,
+            title: `EAD é bom?`,
             content: `Não estou gostando do modelo EAD da maioria das Instituições de ensino, tanto médio quanto superior, não ter o contato
             direto com os professores faz toda a diferença no ensino. O que vocês acham?`,
             likesCount: 12,

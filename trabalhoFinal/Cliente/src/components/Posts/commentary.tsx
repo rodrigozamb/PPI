@@ -84,12 +84,12 @@ export const Commentary = ({
                                 </button>
                                 <Text cursor='pointer' fontSize={['xs','sm']} >{commentaryLikeCounter}</Text>
                             </Flex>
-                            <Flex
+                            {/* <Flex
                                 align='center'
                             >
                                 <Icon as={RiReplyLine} fontSize='20' mr='1' />
                                 <Text fontSize={['xs', 'sm']} >comentar</Text>
-                            </Flex>
+                            </Flex> */}
                         </Flex>
 
                     </Flex>

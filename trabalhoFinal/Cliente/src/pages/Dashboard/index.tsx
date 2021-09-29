@@ -15,24 +15,24 @@ export function Dashboard() {
     const dashboardPosts = [
         {
             community: `f/Faculdade`,
-            author: `d/Abdala`,
-            title: `EAD sucks`,
-            content: `Não estou gostando do modelo EAD da maioria das Instituições de ensino, tanto médio quanto superior, não ter o contato
-            direto com os professores faz toda a diferença no ensino. O que vocês acham?`,
+            author: `por Abdala`,
+            title: `Planos para Ensino na UFU`,
+            content: `Comite de ensino da UFU se reune para discutir quais serão os próximos passos em relação ao ensino remoto, haverá discussão a respeito da volta presencial das aulas práticas para 
+            as disciplinas de âmbito prático. Será discutido a aversão dos estudadentes também?`,
             likesCount: 8,
             dislikesCount: 1,
             commentaryCount: 1,
             shareCount: 0,
             commentaries: [
-                {name: 'Laura Beatris', avatar: 'https://github.com/lauraBeatris.png',content: 'Como aluna eu digo que vale a pena aprender a usar o Teams, fica muito organizado.', likesCounter: 4}
+                {name: 'Laura Beatris', avatar: 'https://github.com/lauraBeatris.png',content: 'Aula presencioal faz toda a diferença no aprendizado, principalmente nas disciplinas práticas.', likesCounter: 4}
             ]
         },
         {
-            community: `f/Jogos`,
-            author: `d/Abdala`,
-            title: `New World é bom?`,
-            content: `Não estou gostando do modelo EAD da maioria das Instituições de ensino, tanto médio quanto superior, não ter o contato
-            direto com os professores faz toda a diferença no ensino. O que vocês acham?`,
+            community: `f/Saúde`,
+            author: `por Abdala`,
+            title: `Como manter a saúde durante pandemia`,
+            content: `Especialistas recomendam muito cuidado durante o período pandêmico, muitas pessoas começaram a praticar exercícios em casa, de forma a evitar contato com outras pessoas.
+            Para você, qual exercício funciona melhor para ser feito em casa ?`,
             likesCount: 12,
             dislikesCount: 6,
             commentaryCount: 0,
@@ -44,7 +44,7 @@ export function Dashboard() {
     return (
         <>  
             <Helmet>
-                <title>Feed | Fala Dev</title>
+                <title>Feed | Fórum PPInfo</title>
             </Helmet>
             <Header />
 

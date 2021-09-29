@@ -148,7 +148,7 @@ export const Post = ({
                         <button onClick={handleLikePost}>
                             {
                                 isPostLiked ? (
-                                    <Icon as={RiThumbUpFill} fontSize={['18','20']} mr='1'  cursor='pointer' color='orange' />
+                                    <Icon as={RiThumbUpFill} fontSize={['18','20']} mr='1'  cursor='pointer' color='green' />
                                 ) : (
                                     <Icon as={RiThumbUpLine} fontSize={['18','20']} mr='1'  cursor='pointer' />
                                 )
@@ -160,7 +160,7 @@ export const Post = ({
                         <button onClick={handleDislikePost}>
                             {
                                 isPostDisliked ? (
-                                    <Icon as={RiThumbDownFill} fontSize={['18','20']} mr='1'  cursor='pointer' color='orange' />
+                                    <Icon as={RiThumbDownFill} fontSize={['18','20']} mr='1'  cursor='pointer' color='red' />
                                 ) : (
                                     <Icon as={RiThumbDownLine} fontSize={['18','20']} mr='1'  cursor='pointer' />
                                 )
@@ -174,7 +174,6 @@ export const Post = ({
                     </Flex>
                 </Flex>
 
-                <Icon as={RiShareLine} ml='auto' fontSize={['18','20']}/>
             </Flex>
             {
                 commentaryList.map(commentary => {

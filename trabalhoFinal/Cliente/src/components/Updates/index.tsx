@@ -10,7 +10,7 @@ export const Updates = () => {
                 fontSize='xl'
                 mb='8'
             >
-                Comunidades populares
+                Comunidades Populares
             </Text>
 
             <Stack>

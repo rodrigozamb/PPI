@@ -176,10 +176,6 @@ export const CreatePost = () => {
                         onChange={(ev) => setPost(ev.target.value)}
                     />
                     <Flex>
-                        <Flex align='center' >
-                            <Icon as={RiLockUnlockLine} fontSize={['15','20']} />
-                            <Text fontSize={['xx-small','xs']} ml='2' >Esse post será público</Text>
-                        </Flex>
                         <Button colorScheme='orange' ml='auto' px={['4','7']} onClick={handleCreatePost} isLoading={isButtonLoading} >
                             <Text fontSize={['xs','sm']} >Postar</Text>
                         </Button>
