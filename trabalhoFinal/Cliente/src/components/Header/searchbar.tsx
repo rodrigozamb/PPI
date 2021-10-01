@@ -22,7 +22,7 @@ export const Searchbar = () => {
                 px='4'
                 mr='4'
                 fontSize='14'
-                placeholder='Buscar na plataforma' 
+                placeholder='Buscar no Fórum' 
                 _placeholder={{color: 'gray.400'}}
             />
 
