@@ -25,8 +25,6 @@ export const SideBarNav = () => {
 
             <NavSection title='PRIVADO'>
                 <NavLink icon={RiSettings4Line} content='Configurações' path='/configurations' />
-                <NavLink icon={RiQuestionLine} content='Suporte' path='/help' />
-                <NavLink icon={RiLogoutBoxLine} content='Sair' path='/'  />
             </NavSection>
         </Stack>
     )
