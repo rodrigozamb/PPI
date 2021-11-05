@@ -1,21 +1,37 @@
+import axios from 'axios'
 import { useState } from 'react'
 import { Flex, Text, Box, Button, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
 
 interface CommunityCardProps {
+    communityID:number,
     title: string,
     subtitle: string,
     isBeingFollowed: boolean,
     handleFollow?: () => VoidFunction
 }
 
-export const CommunityCard = ({ title, subtitle, isBeingFollowed}: CommunityCardProps) => {
+export const CommunityCard = ({ communityID, title, subtitle, isBeingFollowed}: CommunityCardProps) => {
     const toast = useToast()
     const [ isCommunityBeingFollowed, setIsCommunityBeingFollowed ] = useState(isBeingFollowed)
+    const {authToken,user} = useAuth()
 
     function handleFollowCommunity() {
         setIsCommunityBeingFollowed(!isCommunityBeingFollowed)
 
+        const headers= {
+            'Authorization': `Bearer ${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }
+
+        axios.patch(`http://localhost:8080/board/follow/${communityID}`,{},{headers:headers}).then(res=>{
+            console.log(res)
+        })
+        console.log(`Seguiu a board ${communityID}`)
         toast({
             title: "Sucesso !",
             description: `Você agora segue o fórum de ${title}`,

@@ -11,13 +11,15 @@ import {
 import { RiHeartFill, RiHeartLine, RiReplyLine } from 'react-icons/ri'
 
 interface CommentaryProps {
+    commentaryID:number;
     name: string,
     avatar: string;
     commentary: string;
     commentaryLikeCount: number;
 }
 
-export const Commentary = ({ 
+export const Commentary = ({
+    commentaryID,
     name, 
     avatar, 
     commentary,
@@ -69,7 +71,7 @@ export const Commentary = ({
                         <Flex
                             mt='3'
                         >
-                            <Flex
+                            {/* <Flex
                                 align='center'
                                 mr='5'
                             >
@@ -83,7 +85,7 @@ export const Commentary = ({
                                     }
                                 </button>
                                 <Text cursor='pointer' fontSize={['xs','sm']} >{commentaryLikeCounter}</Text>
-                            </Flex>
+                            </Flex> */}
                             {/* <Flex
                                 align='center'
                             >

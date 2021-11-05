@@ -2,6 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import { Post } from './post'
 
 interface CommentaryProps {
+    commentaryID:number;
     name: string,
     avatar: string;
     content: string;
@@ -9,6 +10,7 @@ interface CommentaryProps {
 }
 
 interface PostProps {
+    id: number,
     community: string,
     author: string,
     title: string,
@@ -34,7 +36,7 @@ export const Posts = ({ posts }: PostsProps) => {
             posts.map((post) => {
                 return (
                     <Post
-                        key={post.title}
+                        key={post.id}
                         community={post.community}
                         author={post.author}
                         title={post.title}
@@ -44,6 +46,7 @@ export const Posts = ({ posts }: PostsProps) => {
                         commentaryCount={post.commentaryCount}
                         shareCount={post.shareCount}
                         commentaries={post.commentaries}
+                        postID={post.id}
                     /> 
                 )
             })

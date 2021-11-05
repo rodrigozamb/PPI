@@ -1,27 +1,73 @@
+import axios from 'axios';
+import { useState, useEffect } from 'react'
 import {Text, Flex } from '@chakra-ui/react'
 
 import { Container } from '../../components/Container';
 import { CommunityCard } from '../../components/CommunityCard';
+import { useAuth } from '../../hooks/useAuth';
 
+
+interface IComunity{
+    communityID:number;
+    title:string;
+    subtitle:string;
+}
 
 export const CommunitiesSection = () => {
-    const unfcom = [
-        {title: 'Tecnologia', subtitle: 'principais assuntos'},
-        {title: 'Música', subtitle: 'principais assuntos'},
-        {title: 'Famosos', subtitle: 'principais assuntos'},
-        {title: 'Olimpíadas', subtitle: 'principais assuntos'},
-    ]
 
-    const fcom = [
-        {title: 'Jogos', subtitle: 'principais video games'},
-        {title: 'Saúde', subtitle: 'Dicas e tutoriais'},
-        {title: 'EAD', subtitle: 'principais discussões'},
-        {title: 'Esporte', subtitle: 'principais assuntos'},
-        {title: 'Cozinha', subtitle: 'Melhores receitas'},
-        {title: 'Psicologia', subtitle: 'principais assuntos'},
-        {title: 'Política', subtitle: 'principais discussões'},
-        {title: 'Mágica', subtitle: 'principais truques'},
-    ]
+
+    const [unfcom, setUnfCom] = useState<IComunity[]>([]);
+    const [fcom, setFCom] = useState<IComunity[]>([]);
+    const {authToken,user} = useAuth()
+
+    useEffect(()=>{
+
+        const headers = {
+            'Authorization': `Bearer ${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }
+
+        axios.get('http://localhost:8080/board/feed',{headers:headers})
+        .then(res => {
+
+            var followed: IComunity[] = []
+            for(var i=0;i<res.data.boards.length;i++){
+                followed.push({
+                    communityID:res.data.boards[i].id,
+                    title:res.data.boards[i].name,
+                    subtitle:res.data.boards[i].description
+                })
+            }
+
+            // pegar todos os boards
+            axios.get('http://localhost:8080/board',{headers:headers})
+            .then(res2=>{
+                var unfollowed:IComunity[] = []
+                for(var i=0;i<res2.data.length;i++){
+                    
+                    if(followed.indexOf({communityID:res.data.id,title:res2.data[i].name,subtitle:res2.data[i].description }) < 0)
+
+                        unfollowed.push({
+                            communityID:res2.data[i].id,
+                            title:res2.data[i].name,
+                            subtitle:res2.data[i].description
+                        })
+
+                }
+                
+                setFCom(followed)
+                setUnfCom(unfollowed)
+            })
+
+
+
+        })
+    },[])
+
+
 
     return (
         <>
@@ -32,7 +78,8 @@ export const CommunitiesSection = () => {
                     unfcom.map(community => {
                         return (
                             <CommunityCard
-                                key={community.title}
+                                key={community.communityID}
+                                communityID={community.communityID}
                                 title={community.title}
                                 subtitle={community.subtitle}
                                 isBeingFollowed={false}
@@ -50,7 +97,8 @@ export const CommunitiesSection = () => {
                 fcom.map(community => {
                     return (
                         <CommunityCard
-                            key={community.title}
+                            key={community.communityID}
+                            communityID={community.communityID}
                             title={community.title}
                             subtitle={community.subtitle}
                             isBeingFollowed={true}

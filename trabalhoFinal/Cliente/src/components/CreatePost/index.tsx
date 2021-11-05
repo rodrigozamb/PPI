@@ -12,9 +12,10 @@ import {
     useToast,
     useBreakpointValue 
 } from '@chakra-ui/react'
-import { RiLockUnlockLine } from 'react-icons/ri'
+import axios from 'axios'
 import { Container } from '../Container'
 import { Posts } from '../Posts'
+import { useAuth } from '../../hooks/useAuth'
 
 interface CommentaryProps {
     name: string,
@@ -44,6 +45,9 @@ export const CreatePost = () => {
     const [post, setPost] = useState('');
     const [community, setCommunity] = useState('');
     const [title, setTitle] = useState('');
+    const {authToken,user} = useAuth()
+
+    const username = user?.username;
 
     const [postsList, setPostsList] = useState([])
 
@@ -76,7 +80,7 @@ export const CreatePost = () => {
         }
 
         const formatedPost = {
-            author: 'Rodrigo Zamboni',
+            author: username,
             community: community,
             title: title,
             content: post,
@@ -87,36 +91,81 @@ export const CreatePost = () => {
             commentaries: [],
         }
 
+        let headers= {
+            'Authorization': `Bearer ${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }
+
+
+        let config2 = {
+
+            headers: {
+                'Authorization': `Bearer ${authToken}`,
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Authorization", 
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+                "Content-Type": "application/json;charset=UTF-8"   
+            },
+            body:{
+                name:community,
+                description:community+' board'
+            }
+        }
         setTimeout(async () => {
 
             setIsButtonLoading(false);
 
+
+            axios.get(`http://localhost:8080/board/find/${config2.body.name}`).then(res=>{
+
+                
+                if(res.data != ""){
+                    //Fazer o post
+                    axios.post(`http://localhost:8080/post/${res.data}`,formatedPost,{headers:headers})
+                    .then(res2 =>{
+                        if(res2.data.id != null)
+                            toast({
+                                title: "Sucesso !",
+                                description: "Seu post foi publicado",
+                                status: "success",
+                                duration: 4000,
+                                position: 'top',
+                                isClosable: true,
+                            })
+                    })
+                }else{
+                    //Criar o board
+                    axios.post('http://localhost:8080/board',{name:community,description:community+' board'},{headers:headers}).then(res2=>{
+                        if(res2.status == 201){
+                            // Fazer o post
+                            axios.post(`http://localhost:8080/post/${res2.data.id}`,formatedPost,{headers:headers})
+                            .then(res3 =>{
+                                console.log("Nao exisita o board, foi criado junto com o post")
+                                if(res3.data.id != null)
+                                    toast({
+                                        title: "Sucesso !",
+                                        description: "Seu post foi publicado",
+                                        status: "success",
+                                        duration: 4000,
+                                        position: 'top',
+                                        isClosable: true,
+                                    })
+                            })
+                        }
+                    })
+                }
+
+            })
+            
+        
+            
             setPost('');
             setCommunity('');
             setTitle('')
 
-            toast({
-                title: "Sucesso !",
-                description: "Seu post foi publicado",
-                status: "success",
-                duration: 4000,
-                position: 'top',
-                isClosable: true,
-            })
-
-            var newPosts;
-
-            if (postsList) {
-                newPosts = [...postsList, formatedPost]
-                // setPostsList(newPosts)
-
-            } else {
-                newPosts = [formatedPost]
-                // setPostsList(newPosts)
-            }
-
-            // setPostsList(newPosts)
-            // console.log(newPosts)
         }, 1000);
     }
 
@@ -126,8 +175,8 @@ export const CreatePost = () => {
                 {
                     isWideSize && (
                     <Avatar
-                        name={'Rodrigo Zamboni'}
-                        src={'https://github.com/rodrigozamb.png'}
+                        name={username}
+                        src={user?.avatar}
                         border='1px solid #ed8936'
                         size={ isWideSize ? 'lg' : 'md'} 
                     />

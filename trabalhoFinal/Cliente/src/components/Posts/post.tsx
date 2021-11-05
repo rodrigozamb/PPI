@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { 
     Flex, 
     Text, 
@@ -21,8 +22,10 @@ import {
 
 import { Container } from '../Container'
 import { Commentary } from './commentary'
+import { useAuth } from '../../hooks/useAuth'
 
 interface CommentaryProps {
+    commentaryID:number,
     name: string,
     avatar: string;
     content: string;
@@ -30,6 +33,7 @@ interface CommentaryProps {
 }
 
 interface PostProps {
+    postID: number,
     community: string,
     author: string,
     title: string,
@@ -42,6 +46,7 @@ interface PostProps {
 }
 
 export const Post = ({
+    postID,
     community,
     author,
     title,
@@ -61,10 +66,36 @@ export const Post = ({
     const [likesCounter, setLikesCounter] = useState(likesCount);
     const [dislikesCounter, setDislikesCounter] = useState(dislikesCount);
     const [isCommentSectionHidden, setIsCommentSectionHidden] = useState(true);
+    
+    const {user,authToken} = useAuth()
+
+    useEffect(()=>{
+        
+        axios.get(`http://localhost:8080/like/post/${postID}`,{headers:{
+            "Authorization": "Bearer " + "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSb2RyaWdvemFtYiIsImV4cCI6MTYzNzU5NDkwNiwiaWF0IjoxNjM1Nzk0OTA2fQ.D9euawIWB0V9dORW_b3QBsYffCTaUwUglG5UHBKcaxMJt2vZuS6mH3Ei05CuXrDjJJ62motZf9VqwmrKmFNCAw",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }}).then(res=>{
+            setIsPostLiked(res.data)
+        })
+
+    },[])
 
 
-    function handleLikePost() {
+    async function handleLikePost() {
         setIsPostLiked(!isPostLiked)
+
+        await axios.patch(`http://localhost:8080/like/post/${postID}`,{},{headers:{
+            "Authorization": "Bearer " + "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSb2RyaWdvemFtYiIsImV4cCI6MTYzNzU5NDkwNiwiaWF0IjoxNjM1Nzk0OTA2fQ.D9euawIWB0V9dORW_b3QBsYffCTaUwUglG5UHBKcaxMJt2vZuS6mH3Ei05CuXrDjJJ62motZf9VqwmrKmFNCAw",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }}).then(res=>{
+            console.log(res)
+        })
 
         if(!isPostLiked) {
             setLikesCounter((likesCounter) => likesCounter + 1)
@@ -94,20 +125,35 @@ export const Post = ({
     }
 
     function handleAddCommentary() {
-        const formatedCommentary = {
-            name: 'Rodrigo Zamboni',
-            avatar: 'https://github.com/rodrigozamb.png',
-            content: commentary,
-            likesCounter: 0,
-        }
 
-        setCommentaryCounter((commentaryCounter) => commentaryCounter + 1)
+        // AQUI
 
-        
-        setCommentaryList((commentaryList) => [...commentaryList, formatedCommentary])
+        axios.post(`http://localhost:8080/comment/post/${postID}`,{content:commentary},{headers:{
+            "Authorization": `Bearer ${authToken}`,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization", 
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"   
+        }}).then(res=>{
 
-        setCommentary('')
-        toggleCommentarySection()        
+
+            const formatedCommentary = {
+                commentaryID:res.data.id,
+                name: res.data.creator.username,
+                avatar: `https://github.com/${res.data.creator.username}.png`,
+                content: commentary,
+                likesCounter: 0,
+            }
+    
+            setCommentaryCounter((commentaryCounter) => commentaryCounter + 1)
+    
+            
+            setCommentaryList((commentaryList) => [...commentaryList, formatedCommentary])
+    
+            setCommentary('')
+            toggleCommentarySection()        
+        })
+
     }
 
     function toggleCommentarySection() {
@@ -156,7 +202,7 @@ export const Post = ({
                         </button>
                         <Text cursor='pointer' >{likesCounter}</Text>
                     </Flex>
-                    <Flex align='center' mr='5'>
+                    {/* <Flex align='center' mr='5'>
                         <button onClick={handleDislikePost}>
                             {
                                 isPostDisliked ? (
@@ -167,7 +213,7 @@ export const Post = ({
                             }
                         </button>
                         <Text cursor='pointer' >{dislikesCounter}</Text>
-                    </Flex>
+                    </Flex> */}
                     <Flex align='center'>
                         <Icon as={RiChat2Line} fontSize={['18','20']} mr='1' cursor='pointer' onClick={toggleCommentarySection} />
                         <Text>{commentaryCounter}</Text>
@@ -181,6 +227,7 @@ export const Post = ({
                         <Box key={commentary.content} >
                             <Divider mt='4' borderColor='gray.700' />
                             <Commentary
+                              commentaryID={commentary.commentaryID}
                               avatar={commentary.avatar}
                               name={commentary.name}
                               commentary={commentary.content}
@@ -195,8 +242,8 @@ export const Post = ({
                 <Flex mt='5' align='center' >
                     <Avatar 
                         size='md'
-                        name={'Rodrigo Zamboni'}
-                        src={'https://github.com/rodrigozamb.png'}
+                        name={user?.username}
+                        src={user?.avatar}
                         border='1px solid #ed8936'
                     />
                     <Input 

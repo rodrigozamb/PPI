@@ -15,6 +15,7 @@ import {
 import { RiLockUnlockLine } from 'react-icons/ri'
 import { Container } from '../Container'
 import { Posts } from '../Posts'
+import { useAuth } from '../../hooks/useAuth'
 
 interface CommentaryProps {
     name: string,
@@ -45,6 +46,7 @@ export const PersonalInfo = () => {
     const [community, setCommunity] = useState('');
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const {user} = useAuth()
 
     const [postsList, setPostsList] = useState([])
 
@@ -67,8 +69,8 @@ export const PersonalInfo = () => {
                 {
                     isWideSize && (
                     <Avatar
-                        name={'Rodrigo Zamboni'}
-                        src={'https://github.com/rodrigozamb.png'}
+                        name={user?.username}
+                        src={user?.avatar}
                         border='1px solid #ed8936'
                         size={ isWideSize ? 'lg' : 'md'} 
                     />

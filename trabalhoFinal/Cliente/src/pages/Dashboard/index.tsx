@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet';
 import { Grid, GridItem, useBreakpointValue } from '@chakra-ui/react'
 import { CreatePost } from '../../components/CreatePost';
@@ -5,6 +7,28 @@ import { Header } from '../../components/Header';
 import { Posts } from '../../components/Posts';
 import { SideBar } from '../../components/Sidebar';
 import { Updates } from '../../components/Updates';
+import { useAuth } from '../../hooks/useAuth';
+import {User} from '../../contexts/AuthContext'
+
+interface IComentary{
+    name:string,
+    content:string,
+    avatar:string,
+    likeCounter:number
+}
+
+
+
+interface IPost{
+    community:string,
+    author:string,
+    title: string,
+    content: string,
+    likesCount: number,
+    dislikesCount: number,
+    commentaryCount: number,
+    commentaries?:Array<IComentary>
+}
 
 export function Dashboard() {
     const isWideVersion = useBreakpointValue({
@@ -12,34 +36,62 @@ export function Dashboard() {
         lg: true, 
     })
 
-    const dashboardPosts = [
-        {
-            community: `f/Faculdade`,
-            author: `por Abdala`,
-            title: `Planos para Ensino na UFU`,
-            content: `Comite de ensino da UFU se reune para discutir quais serão os próximos passos em relação ao ensino remoto, haverá discussão a respeito da volta presencial das aulas práticas para 
-            as disciplinas de âmbito prático. Será discutido a aversão dos estudadentes também?`,
-            likesCount: 8,
-            dislikesCount: 1,
-            commentaryCount: 1,
-            shareCount: 0,
-            commentaries: [
-                {name: 'Laura Beatris', avatar: 'https://github.com/lauraBeatris.png',content: 'Aula presencioal faz toda a diferença no aprendizado, principalmente nas disciplinas práticas.', likesCounter: 4}
-            ]
-        },
-        {
-            community: `f/Saúde`,
-            author: `por Abdala`,
-            title: `Como manter a saúde durante pandemia`,
-            content: `Especialistas recomendam muito cuidado durante o período pandêmico, muitas pessoas começaram a praticar exercícios em casa, de forma a evitar contato com outras pessoas.
-            Para você, qual exercício funciona melhor para ser feito em casa ?`,
-            likesCount: 12,
-            dislikesCount: 6,
-            commentaryCount: 0,
-            shareCount: 0,
-            commentaries: []
-        },
-    ]
+    const [dashboardPosts, setDashboardPosts] = useState<any>([]);
+    const {authToken,user} = useAuth()
+
+    useEffect(() => {
+        async function getData() {
+            let config = {
+
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Authorization", 
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+                    "Content-Type": "application/json;charset=UTF-8"   
+                }
+            }
+            
+            await axios.get('http://localhost:8080/post',config).
+            then(res => {
+                
+
+                const newDashboardPosts = []
+
+                for(let i=0;i<res.data.length;i++){
+                        let coms:any = []
+                        for(let j=0;j<res.data[i].commentaries.length;j++){
+                            coms.push({
+                                name:res.data[i].commentaries[j].creator.username,
+                                avatar:'https://github.com/'+res.data[i].commentaries[j].creator.username+'.png',
+                                content:res.data[i].commentaries[j].content,
+                                likesCounter:0
+                            })
+                        }
+                
+
+                    newDashboardPosts.push({
+                        id: res.data[i].id,
+                        community : "f/"+res.data[i].board.name,
+                        author: res.data[i].creator.username,
+                        title: res.data[i].title,
+                        content: res.data[i].content,
+                        likesCount: res.data[i].likes,
+                        dislikesCount:0,
+                        shareCount: 0,
+                        commentaryCount:0,
+                        commentaries:coms
+                    })
+                }
+                setDashboardPosts(newDashboardPosts)
+            });
+
+        }
+
+        getData();
+    }, [])
+
+
 
     return (
         <>  
